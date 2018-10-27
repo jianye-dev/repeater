@@ -22,7 +22,5 @@ func main() {
 
 	rep.Shutdown()
 
-	<-sig
-
 	close(sig)
 }

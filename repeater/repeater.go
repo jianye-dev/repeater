@@ -99,12 +99,18 @@ func (r *Repeater) ListenAndServe(svrAddr, wsAddr, vwAddr string) (err error) {
 loop:
 	for {
 		select {
-		case conn := <-r.chServer:
-			r.onNewServer(conn)
-		case conn := <-r.chViewer:
-			r.onNewViewer(conn)
-		case token := <-r.tokenDone:
-			r.onCloseConnection(token)
+		case conn, ok := <-r.chServer:
+			if ok {
+				r.onNewServer(conn)
+			}
+		case conn, ok := <-r.chViewer:
+			if ok {
+				r.onNewViewer(conn)
+			}
+		case token, ok := <-r.tokenDone:
+			if ok {
+				r.onCloseConnection(token)
+			}
 		case <-r.doneChan:
 			break loop
 		}
